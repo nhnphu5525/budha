@@ -1,11 +1,12 @@
 import React from 'react';
-import { Volume2, VolumeX, User, Sparkles, Maximize2 } from 'lucide-react';
+import { Volume2, VolumeX, User, Sparkles, Maximize2, EyeOff } from 'lucide-react';
 import { sound } from '../../audio/soundEngine';
 import { DevoteeConfig } from '../../types/avatar';
 
 interface HeaderProps {
   onOpenCustomizer: () => void;
   onOpenWisdom: () => void;
+  onToggleCleanMode?: () => void;
   userConfig: DevoteeConfig;
   isAmbientPlaying: boolean;
   setIsAmbientPlaying: (v: boolean) => void;
@@ -14,6 +15,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({
   onOpenCustomizer,
   onOpenWisdom,
+  onToggleCleanMode,
   userConfig,
   isAmbientPlaying,
   setIsAmbientPlaying,
@@ -43,6 +45,18 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Right Controls */}
       <div className="flex items-center gap-1 flex-shrink-0">
+        {/* Live Stream Clean Mode Toggle */}
+        {onToggleCleanMode && (
+          <button
+            onClick={onToggleCleanMode}
+            className="flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium text-amber-200/90 bg-stone-900/80 hover:bg-stone-800/80 border border-stone-700/60 backdrop-blur-md transition-all shadow-sm active:scale-95"
+            title="Ẩn thanh công cụ để Live Stream sạch (Phím tắt: H)"
+          >
+            <EyeOff className="w-3 h-3 text-amber-400" />
+            <span>Ẩn HUD</span>
+          </button>
+        )}
+
         {/* Lời Phật dạy */}
         <button
           onClick={onOpenWisdom}

@@ -65,10 +65,10 @@ export const DevoteeCongregation: React.FC<DevoteeCongregationProps> = ({
         const x = -(2.2 + col * 1.4); // -2.2m to -7.8m
         const isUser = row === 0 && col === 0;
 
-        const gender = genders[(row + col) % 2];
-        const hair = hairStyles[(row * 3 + col) % 3];
-        const robe = robePalettes[(row * 2 + col) % robePalettes.length];
-        const nameIdx = (row * 5 + col) % dharmaNames.length;
+        const fellowGender: Gender = Math.random() > 0.5 ? 'male' : 'female';
+        const fellowHair: HairStyle = hairStyles[Math.floor(Math.random() * hairStyles.length)];
+        const fellowRobe = robePalettes[Math.floor(Math.random() * robePalettes.length)];
+        const nameIdx = Math.floor(Math.random() * dharmaNames.length);
         const fellowName = dharmaNames[nameIdx];
 
         list.push({
@@ -77,10 +77,10 @@ export const DevoteeCongregation: React.FC<DevoteeCongregationProps> = ({
             ? userConfig
             : {
                 name: fellowName,
-                gender,
-                hairStyle: hair,
+                gender: fellowGender,
+                hairStyle: fellowHair,
                 bottomType: 'pants',
-                robeColor: robe,
+                robeColor: fellowRobe,
                 robeName: 'Áo Tràng',
               },
           position: [x, 0, z],
@@ -91,20 +91,20 @@ export const DevoteeCongregation: React.FC<DevoteeCongregationProps> = ({
       // Right wing: 5 columns
       for (let col = 0; col < 5; col++) {
         const x = 2.2 + col * 1.4; // 2.2m to 7.8m
-        const gender = genders[(row + col + 1) % 2];
-        const hair = hairStyles[(row * 2 + col + 1) % 3];
-        const robe = robePalettes[(row + col + 2) % robePalettes.length];
-        const nameIdx = (row * 5 + col + 25) % dharmaNames.length;
+        const fellowGender: Gender = Math.random() > 0.5 ? 'male' : 'female';
+        const fellowHair: HairStyle = hairStyles[Math.floor(Math.random() * hairStyles.length)];
+        const fellowRobe = robePalettes[Math.floor(Math.random() * robePalettes.length)];
+        const nameIdx = Math.floor(Math.random() * dharmaNames.length);
         const fellowName = dharmaNames[nameIdx];
 
         list.push({
           id: count++,
           config: {
             name: fellowName,
-            gender,
-            hairStyle: hair,
+            gender: fellowGender,
+            hairStyle: fellowHair,
             bottomType: 'pants',
-            robeColor: robe,
+            robeColor: fellowRobe,
             robeName: 'Áo Tràng',
           },
           position: [x, 0, z],
@@ -114,7 +114,7 @@ export const DevoteeCongregation: React.FC<DevoteeCongregationProps> = ({
     }
 
     return list;
-  }, [userConfig]);
+  }, []);
 
   // Gộp toàn bộ 100 đệm bồ đoàn và 100 viền hoa sen thành 2 mesh duy nhất để giảm 198 draw calls
   const { mergedCushionBasesGeo, mergedCushionRingsGeo } = useMemo(() => {

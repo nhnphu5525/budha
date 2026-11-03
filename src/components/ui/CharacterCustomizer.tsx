@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { DevoteeConfig, HairStyle, PRESET_ROBES } from '../../types/avatar';
-import { X } from 'lucide-react';
+import { DevoteeConfig, HairStyle, PRESET_ROBES, generateRandomDevotee } from '../../types/avatar';
+import { X, Shuffle } from 'lucide-react';
 import { sound } from '../../audio/soundEngine';
 
 interface CharacterCustomizerProps {
@@ -29,6 +29,12 @@ export const CharacterCustomizer: React.FC<CharacterCustomizerProps> = ({
     'Diệu Âm',
   ];
 
+  const handleRandomize = () => {
+    const random = generateRandomDevotee();
+    setForm(random);
+    sound.playChime();
+  };
+
   const handleSave = () => {
     let finalName = (form.name || '').trim().replace(/^(phật tử|phật\s*tử)\s*/i, '').replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{FE00}-\u{FE0F}]/gu, '');
     if (!finalName) finalName = 'Diệu Tâm';
@@ -49,20 +55,31 @@ export const CharacterCustomizer: React.FC<CharacterCustomizerProps> = ({
           <div className="flex items-center gap-2">
             <span className="text-xl">🪷</span>
             <div>
-              <h2 className="text-lg font-bold text-amber-200 font-serif">
-                Tùy Biến Diện Mạo Phật Tử
+              <h2 className="text-sm sm:text-base font-bold text-amber-200 font-serif">
+                Tùy Biến Diện Mạo
               </h2>
-              <p className="text-[11px] text-amber-200/60 font-serif">
-                Chỉnh sửa pháp danh, kiểu tóc, y phục và sắc màu
+              <p className="text-[10px] text-amber-200/60 font-serif">
+                Hình hài, pháp danh & y phục
               </p>
             </div>
           </div>
-          <button
-            onClick={onClose}
-            className="p-1 rounded-full text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={handleRandomize}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium text-amber-200 bg-amber-950/70 hover:bg-amber-900/80 border border-amber-500/35 transition-all active:scale-95"
+              title="Đổi diện mạo ngẫu nhiên"
+            >
+              <Shuffle className="w-3 h-3 text-amber-400" />
+              <span>Ngẫu Nhiên</span>
+            </button>
+            <button
+              onClick={onClose}
+              className="p-1 rounded-full text-stone-400 hover:text-stone-100 hover:bg-stone-800 transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Form Body (Scrollable) */}
