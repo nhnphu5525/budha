@@ -3,9 +3,16 @@
 @tailwind utilities;
 
 @layer base {
+  html, body, #root {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #0a0807;
+  }
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #0d0a08;
     color: #f7e7ce;
   }
 }

@@ -119,106 +119,89 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-[100dvh] overflow-hidden bg-[#070504] flex items-center justify-center relative select-none">
-      {/* Outer ambient gradient (visible only on desktop displays wider than 9:16) */}
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#1d1510] via-[#0c0907] to-[#040302]" />
+    <div className="relative w-screen h-screen w-full h-full overflow-hidden bg-[#0a0807] flex flex-col select-none">
+      {/* 1. Header Bar (Hidden in Clean Stream Mode) */}
+      {!isCleanStreamMode && (
+        <Header
+          onOpenCustomizer={() => setIsCustomizerOpen(true)}
+          onOpenWisdom={() => setIsWisdomOpen(true)}
+          onToggleCleanMode={() => setIsCleanStreamMode(true)}
+          userConfig={userConfig}
+          isAmbientPlaying={isAmbientPlaying}
+          setIsAmbientPlaying={setIsAmbientPlaying}
+        />
+      )}
 
-      {/* Main 9:16 Viewport Container:
-          100% full-bleed fit for TikTok Live Studio browser source (1080x1920 or 720x1280)
-          Zero borders, zero rounded corners, zero notches, zero margins! */}
-      <div
-        className="relative w-full h-full max-h-[100dvh] aspect-[9/16] overflow-hidden bg-[#0a0807] flex flex-col mx-auto"
-        style={{
-          maxWidth: 'calc(100dvh * 9 / 16)',
-          maxHeight: 'calc(100vw * 16 / 9)',
-        }}
-      >
-        {/* 3D Grand 100-Devotee Sanctuary (Chánh Điện) */}
-        <div className="relative w-full h-full overflow-hidden bg-[#0a0807] flex flex-col">
-          {/* 1. Header Bar (Hidden in Clean Stream Mode) */}
-          {!isCleanStreamMode && (
-            <Header
-              onOpenCustomizer={() => setIsCustomizerOpen(true)}
-              onOpenWisdom={() => setIsWisdomOpen(true)}
-              onToggleCleanMode={() => setIsCleanStreamMode(true)}
-              userConfig={userConfig}
-              isAmbientPlaying={isAmbientPlaying}
-              setIsAmbientPlaying={setIsAmbientPlaying}
-            />
-          )}
+      {/* 2. Camera View Toolbar (Hidden in Clean Stream Mode) */}
+      {!isCleanStreamMode && (
+        <CameraToolbar currentView={cameraView} onSelectView={setCameraView} />
+      )}
 
-          {/* 2. Camera View Toolbar (Hidden in Clean Stream Mode) */}
-          {!isCleanStreamMode && (
-            <CameraToolbar currentView={cameraView} onSelectView={setCameraView} />
-          )}
+      {/* 3. Floating Button to Restore HUD when in Clean Stream Mode */}
+      {isCleanStreamMode && (
+        <button
+          onClick={() => setIsCleanStreamMode(false)}
+          className="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-950/80 hover:bg-stone-900 border border-amber-500/40 text-amber-200 text-[11px] font-medium shadow-xl backdrop-blur-md transition-all active:scale-95 opacity-60 hover:opacity-100"
+          title="Hiện lại thanh điều khiển (Phím tắt: H)"
+        >
+          <Eye className="w-3.5 h-3.5 text-amber-400" />
+          <span>Hiện Menu</span>
+        </button>
+      )}
 
-          {/* 3. Floating Button to Restore HUD when in Clean Stream Mode */}
-          {isCleanStreamMode && (
-            <button
-              onClick={() => setIsCleanStreamMode(false)}
-              className="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-stone-950/80 hover:bg-stone-900 border border-amber-500/40 text-amber-200 text-[11px] font-medium shadow-xl backdrop-blur-md transition-all active:scale-95 opacity-60 hover:opacity-100"
-              title="Hiện lại thanh điều khiển (Phím tắt: H)"
-            >
-              <Eye className="w-3.5 h-3.5 text-amber-400" />
-              <span>Hiện Menu</span>
-            </button>
-          )}
-
-          {/* 4. Main 3D Viewport with 100 Devotees in Enclosed Grand Sanctuary */}
-          <div className="w-full h-full">
-            <TempleCanvas
-              cameraView={cameraView}
-              userConfig={userConfig}
-              userPose={userPose}
-              incenseCount={incenseCount}
-              onPlantIncense={handlePlantIncense}
-              onCompleteIncenseRitual={handleCompleteIncenseRitual}
-            />
-          </div>
-
-          {/* 5. Action Panel (Hidden in Clean Stream Mode) */}
-          {!isCleanStreamMode && (
-            <ActionPanel
-              currentPose={userPose}
-              onSetPose={handlePoseChange}
-              onOfferIncense={handleOfferIncense}
-              onOpenPrayerModal={() => setIsPrayerOpen(true)}
-              onOpenWisdomModal={() => setIsWisdomOpen(true)}
-            />
-          )}
-
-          {/* 6. Notification Toast */}
-          {toastMessage && (
-            <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-bounce max-w-[90%]">
-              <div className="px-3 py-1.5 rounded-full bg-amber-950/95 text-amber-100 text-[11px] font-medium border border-amber-500/50 shadow-xl backdrop-blur-md flex items-center gap-1.5 text-center">
-                <span className="flex-shrink-0">🪷</span>
-                <span className="truncate">{toastMessage}</span>
-              </div>
-            </div>
-          )}
-
-          {/* 7. Chanting ticker */}
-          <div className="absolute bottom-0 left-0 right-0 z-10 py-0.5 bg-black/75 text-[8.5px] text-amber-300/70 text-center tracking-wider font-serif pointer-events-none truncate px-2">
-            NAM MÔ BỔN SƯ THÍCH CA MÂU NI PHẬT • NAM MÔ A DI ĐÀ PHẬT • NAM MÔ ĐẠI BI QUÁN THẾ ÂM BỒ TÁT
-          </div>
-
-          {/* 8. Interactive Modals */}
-          <CharacterCustomizer
-            isOpen={isCustomizerOpen}
-            onClose={() => setIsCustomizerOpen(false)}
-            userConfig={userConfig}
-            onUpdateConfig={setUserConfig}
-          />
-
-          <WisdomModal isOpen={isWisdomOpen} onClose={() => setIsWisdomOpen(false)} />
-
-          <PrayerModal
-            isOpen={isPrayerOpen}
-            onClose={() => setIsPrayerOpen(false)}
-            devoteeName={userConfig.name}
-          />
-        </div>
+      {/* 4. Main 3D Viewport with 100 Devotees in Enclosed Grand Sanctuary */}
+      <div className="w-full h-full">
+        <TempleCanvas
+          cameraView={cameraView}
+          userConfig={userConfig}
+          userPose={userPose}
+          incenseCount={incenseCount}
+          onPlantIncense={handlePlantIncense}
+          onCompleteIncenseRitual={handleCompleteIncenseRitual}
+        />
       </div>
+
+      {/* 5. Action Panel (Hidden in Clean Stream Mode) */}
+      {!isCleanStreamMode && (
+        <ActionPanel
+          currentPose={userPose}
+          onSetPose={handlePoseChange}
+          onOfferIncense={handleOfferIncense}
+          onOpenPrayerModal={() => setIsPrayerOpen(true)}
+          onOpenWisdomModal={() => setIsWisdomOpen(true)}
+        />
+      )}
+
+      {/* 6. Notification Toast */}
+      {toastMessage && (
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-bounce max-w-[90%]">
+          <div className="px-3 py-1.5 rounded-full bg-amber-950/95 text-amber-100 text-[11px] font-medium border border-amber-500/50 shadow-xl backdrop-blur-md flex items-center gap-1.5 text-center">
+            <span className="flex-shrink-0">🪷</span>
+            <span className="truncate">{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Chanting ticker */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 py-0.5 bg-black/75 text-[8.5px] text-amber-300/70 text-center tracking-wider font-serif pointer-events-none truncate px-2">
+        NAM MÔ BỔN SƯ THÍCH CA MÂU NI PHẬT • NAM MÔ A DI ĐÀ PHẬT • NAM MÔ ĐẠI BI QUÁN THẾ ÂM BỒ TÁT
+      </div>
+
+      {/* 8. Interactive Modals */}
+      <CharacterCustomizer
+        isOpen={isCustomizerOpen}
+        onClose={() => setIsCustomizerOpen(false)}
+        userConfig={userConfig}
+        onUpdateConfig={setUserConfig}
+      />
+
+      <WisdomModal isOpen={isWisdomOpen} onClose={() => setIsWisdomOpen(false)} />
+
+      <PrayerModal
+        isOpen={isPrayerOpen}
+        onClose={() => setIsPrayerOpen(false)}
+        devoteeName={userConfig.name}
+      />
     </div>
   );
 };

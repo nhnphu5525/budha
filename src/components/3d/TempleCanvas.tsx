@@ -25,40 +25,40 @@ const CameraDirector: React.FC<{ view: CameraView }> = ({ view }) => {
   const { camera, size } = useThree();
   const controlsRef = useRef<any>(null);
 
-  const isPortrait = size.width < size.height;
+  // Thiết lập góc máy luôn là chuẩn điện thoại dọc 9:16 (Portrait)
+  const isPortrait = true;
 
-  // Responsive FOV: Tự động mở rộng FOV trên màn hình điện thoại dọc (Portrait)
-  // để bao quát 100% trọn vẹn 100 Phật tử và các hàng tượng Bồ Tát hai bên
+  // Responsive FOV: Trường nhìn 76 độ chuẩn dọc bao quát trọn vẹn 100 Phật tử và bàn Phật
   useEffect(() => {
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = isPortrait ? 76 : 48;
+      camera.fov = 76;
       camera.updateProjectionMatrix();
     }
-  }, [camera, isPortrait]);
+  }, [camera]);
 
-  // Enclosed Grand Sanctuary Camera Presets (Tối ưu riêng cho cả Màn hình Ngang & Dọc trên chánh điện mở rộng)
+  // Enclosed Grand Sanctuary Camera Presets chuẩn 9:16
   const presets: Record<CameraView, { pos: [number, number, number]; lookAt: [number, number, number] }> = useMemo(() => ({
     // Góc nhìn qua vai Phật tử
     devotee: {
-      pos: isPortrait ? [-2.2, 1.85, 6.0] : [-2.2, 1.68, 5.4],
-      lookAt: isPortrait ? [-2.2, 1.35, -6.0] : [-2.2, 1.25, -6.0],
+      pos: [-2.2, 1.85, 6.0],
+      lookAt: [-2.2, 1.35, -6.0],
     },
-    // Toàn cảnh 100 Phật tử trong chánh điện (bao quát 100% toàn bộ 100 vị Phật tử cùng lúc trên màn hình điện thoại)
+    // Toàn cảnh 100 Phật tử trong chánh điện
     hall: {
-      pos: isPortrait ? [0, 18.0, 38.0] : [0, 12.0, 31.5],
-      lookAt: isPortrait ? [0, 1.8, 5.0] : [0, 2.5, 3.5],
+      pos: [0, 18.0, 38.0],
+      lookAt: [0, 1.8, 5.0],
     },
     // Cận cảnh bàn đảnh lễ và Tam Thế Phật Đài
     altar: {
-      pos: isPortrait ? [0, 5.2, 11.2] : [0, 4.0, 6.8],
+      pos: [0, 5.2, 11.2],
       lookAt: [0, 4.2, -6.0],
     },
     // Góc tự do
     free: {
-      pos: isPortrait ? [0, 10.0, 22.0] : [0, 8.0, 18.0],
+      pos: [0, 10.0, 22.0],
       lookAt: [0, 2.5, 4.0],
     },
-  }), [isPortrait]);
+  }), []);
 
   const isTransitioningRef = useRef(false);
   const targetPosRef = useRef(new THREE.Vector3(...presets[view].pos));
