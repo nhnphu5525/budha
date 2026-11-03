@@ -113,7 +113,7 @@ export const TempleCanvas: React.FC<TempleCanvasProps> = ({
       <Canvas
         shadows="basic"
         dpr={1}
-        camera={{ position: [0, 12.0, 30.0], fov: 48 }}
+        camera={{ position: [0, 18.0, 38.0], fov: 76 }}
         gl={{
           antialias: false,
           alpha: false,

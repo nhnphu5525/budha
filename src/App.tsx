@@ -86,82 +86,115 @@ export const App: React.FC = () => {
     }
   };
 
-  // IF USER HAS NOT ENTERED SANCTUARY YET -> SHOW DEDICATED CHARACTER CREATION SCREEN
-  if (!hasEnteredSanctuary) {
-    return (
-      <CharacterCreationScreen
-        initialConfig={userConfig}
-        onConfirm={handleConfirmCreation}
-      />
-    );
-  }
-
-  // ONCE ENTERED -> SHOW FULL 100-DEVOTEE 3D SANCTUARY
+  // Render complete experience inside standard 9:16 mobile resolution container
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-[#0a0807] select-none">
-      {/* 1. Header Bar */}
-      <Header
-        onOpenCustomizer={() => setIsCustomizerOpen(true)}
-        onOpenWisdom={() => setIsWisdomOpen(true)}
-        userConfig={userConfig}
-        isAmbientPlaying={isAmbientPlaying}
-        setIsAmbientPlaying={setIsAmbientPlaying}
-      />
+    <div className="w-full h-[100dvh] overflow-hidden bg-[#070504] flex items-center justify-center relative select-none">
+      {/* Background ambient lighting for widescreen/desktop display */}
+      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#1d1510] via-[#0c0907] to-[#040302]" />
 
-      {/* 2. Camera View Toolbar */}
-      <CameraToolbar currentView={cameraView} onSelectView={setCameraView} />
-
-      {/* 3. Main 3D Viewport with 100 Devotees in Enclosed Grand Sanctuary */}
-      <div className="w-full h-full">
-        <TempleCanvas
-          cameraView={cameraView}
-          userConfig={userConfig}
-          userPose={userPose}
-          incenseCount={incenseCount}
-          onPlantIncense={handlePlantIncense}
-          onCompleteIncenseRitual={handleCompleteIncenseRitual}
-        />
+      {/* Ambient glowing aura effects on larger screens */}
+      <div className="hidden sm:block absolute inset-0 pointer-events-none overflow-hidden opacity-25">
+        <div className="absolute top-1/4 left-1/4 w-80 h-80 rounded-full bg-amber-600/10 blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full bg-amber-700/10 blur-3xl" />
       </div>
 
-      {/* 4. Action Panel */}
-      <ActionPanel
-        currentPose={userPose}
-        onSetPose={handlePoseChange}
-        onOfferIncense={handleOfferIncense}
-        onOpenPrayerModal={() => setIsPrayerOpen(true)}
-        onOpenWisdomModal={() => setIsWisdomOpen(true)}
-      />
+      {/* Floating resolution tag on desktop */}
+      <div className="hidden lg:flex absolute top-4 left-6 z-10 items-center gap-2 px-3 py-1.5 rounded-full bg-stone-900/80 border border-amber-500/30 text-[11px] text-amber-300 font-mono backdrop-blur-md pointer-events-none shadow-lg">
+        <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+        <span>Độ phân giải điện thoại dọc: 9:16 (Portrait)</span>
+      </div>
 
-      {/* 5. Notification Toast */}
-      {toastMessage && (
-        <div className="absolute top-24 sm:top-28 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-bounce max-w-[92vw]">
-          <div className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-amber-950/95 text-amber-100 text-[11px] sm:text-xs font-medium border border-amber-500/50 shadow-xl backdrop-blur-md flex items-center gap-1.5 sm:gap-2 text-center">
-            <span className="flex-shrink-0">🪷</span>
-            <span className="truncate">{toastMessage}</span>
+      {/* Standard 9:16 Mobile Phone Viewport Container */}
+      <div
+        className="relative w-full h-full max-h-[100dvh] aspect-[9/16] overflow-hidden bg-[#0a0807] flex flex-col sm:rounded-[36px] sm:border-[5px] sm:border-[#2c221a] sm:shadow-[0_0_60px_rgba(0,0,0,0.95),0_0_25px_rgba(217,119,6,0.18)] sm:ring-1 sm:ring-amber-500/30 sm:h-[96dvh] sm:max-h-[96dvh] mx-auto"
+        style={{
+          maxWidth: 'calc(100dvh * 9 / 16)',
+          maxHeight: 'calc(100vw * 16 / 9)',
+        }}
+      >
+        {/* Subtle Phone Dynamic Island / Camera Notch on Desktop Phone Frame */}
+        <div className="hidden sm:flex absolute top-1.5 left-1/2 -translate-x-1/2 z-40 items-center justify-center pointer-events-none">
+          <div className="w-20 h-3.5 bg-stone-950/90 rounded-full border border-stone-800/80 shadow-inner flex items-center justify-center gap-1.5 px-2">
+            <div className="w-1.5 h-1.5 rounded-full bg-stone-800 border border-stone-700" />
+            <div className="w-6 h-1 rounded-full bg-stone-800/80" />
           </div>
         </div>
-      )}
 
-      {/* 6. Chanting ticker */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 py-0.5 bg-black/60 text-[8px] sm:text-[10px] text-amber-300/60 text-center tracking-wider font-serif pointer-events-none truncate px-2">
-        NAM MÔ BỔN SƯ THÍCH CA MÂU NI PHẬT • NAM MÔ A DI ĐÀ PHẬT • NAM MÔ ĐẠI BI QUÁN THẾ ÂM BỒ TÁT
+        {/* 1. SCREEN 1: Character Creation (Tam Quan) */}
+        {!hasEnteredSanctuary ? (
+          <CharacterCreationScreen
+            initialConfig={userConfig}
+            onConfirm={handleConfirmCreation}
+          />
+        ) : (
+          /* 2. SCREEN 2: 100-Devotee 3D Sanctuary (Chánh Điện) */
+          <div className="relative w-full h-full overflow-hidden bg-[#0a0807] flex flex-col">
+            {/* 1. Header Bar */}
+            <Header
+              onOpenCustomizer={() => setIsCustomizerOpen(true)}
+              onOpenWisdom={() => setIsWisdomOpen(true)}
+              userConfig={userConfig}
+              isAmbientPlaying={isAmbientPlaying}
+              setIsAmbientPlaying={setIsAmbientPlaying}
+            />
+
+            {/* 2. Camera View Toolbar */}
+            <CameraToolbar currentView={cameraView} onSelectView={setCameraView} />
+
+            {/* 3. Main 3D Viewport with 100 Devotees in Enclosed Grand Sanctuary */}
+            <div className="w-full h-full">
+              <TempleCanvas
+                cameraView={cameraView}
+                userConfig={userConfig}
+                userPose={userPose}
+                incenseCount={incenseCount}
+                onPlantIncense={handlePlantIncense}
+                onCompleteIncenseRitual={handleCompleteIncenseRitual}
+              />
+            </div>
+
+            {/* 4. Action Panel */}
+            <ActionPanel
+              currentPose={userPose}
+              onSetPose={handlePoseChange}
+              onOfferIncense={handleOfferIncense}
+              onOpenPrayerModal={() => setIsPrayerOpen(true)}
+              onOpenWisdomModal={() => setIsWisdomOpen(true)}
+            />
+
+            {/* 5. Notification Toast */}
+            {toastMessage && (
+              <div className="absolute top-20 left-1/2 -translate-x-1/2 z-30 pointer-events-none animate-bounce max-w-[90%]">
+                <div className="px-3 py-1.5 rounded-full bg-amber-950/95 text-amber-100 text-[11px] font-medium border border-amber-500/50 shadow-xl backdrop-blur-md flex items-center gap-1.5 text-center">
+                  <span className="flex-shrink-0">🪷</span>
+                  <span className="truncate">{toastMessage}</span>
+                </div>
+              </div>
+            )}
+
+            {/* 6. Chanting ticker */}
+            <div className="absolute bottom-0 left-0 right-0 z-10 py-0.5 bg-black/70 text-[8px] text-amber-300/60 text-center tracking-wider font-serif pointer-events-none truncate px-2">
+              NAM MÔ BỔN SƯ THÍCH CA MÂU NI PHẬT • NAM MÔ A DI ĐÀ PHẬT • NAM MÔ ĐẠI BI QUÁN THẾ ÂM BỒ TÁT
+            </div>
+
+            {/* 7. Interactive Modals */}
+            <CharacterCustomizer
+              isOpen={isCustomizerOpen}
+              onClose={() => setIsCustomizerOpen(false)}
+              userConfig={userConfig}
+              onUpdateConfig={setUserConfig}
+            />
+
+            <WisdomModal isOpen={isWisdomOpen} onClose={() => setIsWisdomOpen(false)} />
+
+            <PrayerModal
+              isOpen={isPrayerOpen}
+              onClose={() => setIsPrayerOpen(false)}
+              devoteeName={userConfig.name}
+            />
+          </div>
+        )}
       </div>
-
-      {/* 7. Interactive Modals */}
-      <CharacterCustomizer
-        isOpen={isCustomizerOpen}
-        onClose={() => setIsCustomizerOpen(false)}
-        userConfig={userConfig}
-        onUpdateConfig={setUserConfig}
-      />
-
-      <WisdomModal isOpen={isWisdomOpen} onClose={() => setIsWisdomOpen(false)} />
-
-      <PrayerModal
-        isOpen={isPrayerOpen}
-        onClose={() => setIsPrayerOpen(false)}
-        devoteeName={userConfig.name}
-      />
     </div>
   );
 };

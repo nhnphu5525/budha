@@ -40,15 +40,15 @@ export const CameraToolbar: React.FC<CameraToolbarProps> = ({ currentView, onSel
   ];
 
   return (
-    <div className="absolute top-14 sm:top-18 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-[96vw]">
-      <div className="flex items-center gap-1 sm:gap-1.5 p-1 rounded-full bg-stone-950/85 border border-amber-500/35 backdrop-blur-md shadow-2xl shadow-stone-950/80 overflow-x-auto scrollbar-none">
+    <div className="absolute top-12 left-1/2 -translate-x-1/2 z-20 pointer-events-auto max-w-[94%] w-auto">
+      <div className="flex items-center gap-1 p-1 rounded-full bg-stone-950/90 border border-amber-500/35 backdrop-blur-md shadow-2xl shadow-stone-950/80">
         {views.map((v) => {
           const isActive = currentView === v.id;
           return (
             <button
               key={v.id}
               onClick={() => onSelectView(v.id)}
-              className={`flex items-center gap-1 sm:gap-1.5 px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-xs font-semibold transition-all whitespace-nowrap flex-shrink-0 ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold transition-all whitespace-nowrap flex-shrink-0 active:scale-95 ${
                 isActive
                   ? 'bg-amber-600/40 text-amber-200 border border-amber-400/70 shadow-sm shadow-amber-500/30'
                   : 'text-stone-300 hover:text-amber-200 hover:bg-white/5 border border-transparent'
@@ -56,10 +56,7 @@ export const CameraToolbar: React.FC<CameraToolbarProps> = ({ currentView, onSel
               title={v.desc}
             >
               <span className={isActive ? 'text-amber-300' : 'text-stone-400'}>{v.icon}</span>
-              <span className="text-[11px] sm:text-[12px]">
-                <span className="sm:hidden">{v.shortLabel}</span>
-                <span className="hidden sm:inline">{v.label}</span>
-              </span>
+              <span>{v.shortLabel}</span>
             </button>
           );
         })}

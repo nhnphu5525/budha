@@ -72,8 +72,8 @@ export const WisdomModal: React.FC<WisdomModalProps> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2.5 sm:p-4 bg-black/75 backdrop-blur-sm pointer-events-auto">
-      <div className="relative w-full max-w-lg bg-stone-900 border border-amber-500/40 rounded-2xl shadow-2xl p-4 sm:p-6 text-stone-100 overflow-hidden max-h-[94vh] overflow-y-auto">
+    <div className="absolute inset-0 z-50 flex items-center justify-center p-3 bg-black/80 backdrop-blur-sm pointer-events-auto">
+      <div className="relative w-full max-w-[94%] bg-stone-900 border border-amber-500/40 rounded-2xl shadow-2xl p-4 text-stone-100 overflow-hidden max-h-[88%] overflow-y-auto">
         {/* Top gold bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-600 via-amber-300 to-amber-600"></div>
 
